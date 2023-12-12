@@ -130,7 +130,7 @@ public class TelluriumConfig {
             final String newline = System.lineSeparator(); // Wrap text
 
             // Write comments
-            if (COMMENTS.size() > 0) {
+            if (!COMMENTS.isEmpty()) {
                 for (String s : COMMENTS) {
                     writer.write("#" + s + newline);
                 }
@@ -141,7 +141,7 @@ public class TelluriumConfig {
             writer.write(newline);
 
             // Write config entries
-            if (ENTRIES.size() > 0) {
+            if (!ENTRIES.isEmpty()) {
                 for (ConfigEntry entry : ENTRIES) {
                     String entrySeparator = "=";
 
