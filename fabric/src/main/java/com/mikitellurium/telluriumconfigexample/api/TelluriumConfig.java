@@ -40,7 +40,7 @@ import java.util.Scanner;
 /**
  * A class used to create and load simple config files.
  * @author Miki Tellurium
- * @version 1.4.0-Fabric
+ * @version 1.5.0_beta-Fabric
  */
 @SuppressWarnings("rawtypes")
 public class TelluriumConfig {
@@ -63,7 +63,7 @@ public class TelluriumConfig {
     }
 
     /**
-     * Return the path of the config file
+     * Return the path of the config file.
      *
      * @return the config file path
      */
@@ -104,10 +104,10 @@ public class TelluriumConfig {
     }
 
     /**
-     * Build a new config file.
+     * Build the config file.
      * <p>
      * If the file already exist also load all its entries values.
-     * Call this during the initialization phase of the game.
+     * This should be called during the initialization phase of the game.
      */
     public void build() {
         File file = new File(this.file);
