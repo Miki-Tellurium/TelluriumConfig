@@ -404,7 +404,10 @@ public class TelluriumConfig {
         }
 
         private <T extends ConfigEntry<?>> void buildEntry(T configEntry, EntryBuilderContext context) {
-            configEntry.comment(context.getComments().get(0)); //todo fix temporary
+            List<String> comments = context.getComments();
+            if (!comments.isEmpty()) {
+                configEntry.comment(comments.get(0)); //todo add support for multiple comment
+            }
             this.context = new EntryBuilderContext();
         }
 
