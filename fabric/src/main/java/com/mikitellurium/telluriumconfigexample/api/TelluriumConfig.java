@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -82,125 +83,6 @@ public class TelluriumConfig {
     public TelluriumConfig comment(String comment) {
         COMMENTS.add(comment);
         return this;
-    }
-
-    /**
-     * Makes an entry that holds a boolean value.
-     *
-     * @param key the name of the entry
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public ConfigEntry<Boolean> define(String key, boolean defaultValue) {
-        ConfigEntry<Boolean> newEntry = new ConfigEntry<>(this, key, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a integer value.
-     *
-     * @param key the name of the entry
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public ConfigEntry<Integer> define(String key, int defaultValue) {
-        ConfigEntry<Integer> newEntry = new ConfigEntry<>(this, key, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a integer value.
-     * <p>
-     * This value will always stay between the specified
-     * range (inclusive).
-     *
-     * @param key the name of the entry
-     * @param minValue the minimum value this entry can have
-     * @param maxValue the maximum value this entry can have
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public RangedConfigEntry<Integer> defineInRange(String key, int minValue, int maxValue, int defaultValue) {
-        RangedConfigEntry<Integer> newEntry = new RangedConfigEntry<>(this, key, minValue, maxValue, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a double value.
-     *
-     * @param key the name of the entry
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public ConfigEntry<Double> define(String key, double defaultValue) {
-        ConfigEntry<Double> newEntry = new ConfigEntry<>(this, key, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a double value.
-     * <p>
-     * This value will always stay between the specified
-     * range (inclusive).
-     *
-     * @param key the name of the entry
-     * @param minValue the minimum value this entry can have
-     * @param maxValue the maximum value this entry can have
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public RangedConfigEntry<Double> defineInRange(String key, double minValue, double maxValue, double defaultValue) {
-        RangedConfigEntry<Double> newEntry = new RangedConfigEntry<>(this, key, minValue, maxValue, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a long value.
-     *
-     * @param key the name of the entry
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public ConfigEntry<Long> define(String key, long defaultValue) {
-        ConfigEntry<Long> newEntry = new ConfigEntry<>(this, key, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a long value.
-     * <p>
-     * This value will always stay between the specified
-     * range (inclusive).
-     *
-     * @param key the name of the entry
-     * @param minValue the minimum value this entry can have
-     * @param maxValue the maximum value this entry can have
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public RangedConfigEntry<Long> defineInRange(String key, long minValue, long maxValue, long defaultValue) {
-        RangedConfigEntry<Long> newEntry = new RangedConfigEntry<>(this, key, minValue, maxValue, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
-    }
-
-    /**
-     * Makes an entry that holds a string value.
-     *
-     * @param key the name of the entry
-     * @param defaultValue the default value of the entry
-     * @return the config entry that was created
-     */
-    public ConfigEntry<String> define(String key, String defaultValue) {
-        ConfigEntry<String> newEntry = new ConfigEntry<>(this, key, defaultValue);
-        ENTRIES.add(newEntry);
-        return newEntry;
     }
 
     /**
@@ -342,6 +224,174 @@ public class TelluriumConfig {
         if (line.isEmpty()) return false;
         else if (line.startsWith("#") || line.startsWith("[")) return false;
         return true;
+    }
+
+    public class EntryBuilder {
+
+        private final TelluriumConfig parent;
+        private EntryBuilderContext context = new EntryBuilderContext();
+
+        private EntryBuilder(TelluriumConfig parent) {
+            this.parent = parent;
+        }
+
+        /**
+         * Makes an entry that holds a boolean value.
+         *
+         * @param key the name of the entry
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public ConfigEntry<Boolean> define(String key, boolean defaultValue) {
+            ConfigEntry<Boolean> newEntry = new ConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a integer value.
+         *
+         * @param key the name of the entry
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public ConfigEntry<Integer> define(String key, int defaultValue) {
+            ConfigEntry<Integer> newEntry = new ConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a integer value.
+         * <p>
+         * This value will always stay between the specified
+         * range (inclusive).
+         *
+         * @param key the name of the entry
+         * @param minValue the minimum value this entry can have
+         * @param maxValue the maximum value this entry can have
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public RangedConfigEntry<Integer> defineInRange(String key, int minValue, int maxValue, int defaultValue) {
+            RangedConfigEntry<Integer> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a double value.
+         *
+         * @param key the name of the entry
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public ConfigEntry<Double> define(String key, double defaultValue) {
+            ConfigEntry<Double> newEntry = new ConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a double value.
+         * <p>
+         * This value will always stay between the specified
+         * range (inclusive).
+         *
+         * @param key the name of the entry
+         * @param minValue the minimum value this entry can have
+         * @param maxValue the maximum value this entry can have
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public RangedConfigEntry<Double> defineInRange(String key, double minValue, double maxValue, double defaultValue) {
+            RangedConfigEntry<Double> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a long value.
+         *
+         * @param key the name of the entry
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public ConfigEntry<Long> define(String key, long defaultValue) {
+            ConfigEntry<Long> newEntry = new ConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a long value.
+         * <p>
+         * This value will always stay between the specified
+         * range (inclusive).
+         *
+         * @param key the name of the entry
+         * @param minValue the minimum value this entry can have
+         * @param maxValue the maximum value this entry can have
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public RangedConfigEntry<Long> defineInRange(String key, long minValue, long maxValue, long defaultValue) {
+            RangedConfigEntry<Long> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        /**
+         * Makes an entry that holds a string value.
+         *
+         * @param key the name of the entry
+         * @param defaultValue the default value of the entry
+         * @return the config entry that was created
+         */
+        public ConfigEntry<String> define(String key, String defaultValue) {
+            ConfigEntry<String> newEntry = new ConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            context = new EntryBuilderContext();
+            return newEntry;
+        }
+
+        public EntryBuilder comment(String comment) {
+            context.add(comment);
+            return this;
+        }
+
+        public EntryBuilder comment(String... comments) {
+            context.add(comments);
+            return this;
+        }
+
+    }
+
+    private static class EntryBuilderContext {
+
+        private final LinkedList<String> comments = new LinkedList<>();
+
+        private EntryBuilderContext() {}
+
+        public void add(String comment) {
+            this.comments.add(comment);
+        }
+
+        public void add(String... comments) {
+            this.comments.addAll(List.of(comments));
+        }
+
+        public LinkedList<String> getComments() {
+            return comments;
+        }
+
     }
 
     /**
