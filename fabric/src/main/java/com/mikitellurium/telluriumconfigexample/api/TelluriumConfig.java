@@ -235,6 +235,29 @@ public class TelluriumConfig {
             this.parent = parent;
         }
 
+
+        /**
+         * Add a comment to the entry.
+         *
+         * @param comment the comment to add to the entry
+         * @return this instance of the entry builder
+         */
+        public EntryBuilder comment(String comment) {
+            context.add(comment);
+            return this;
+        }
+
+        /**
+         * Add a list of comments to the entry.
+         *
+         * @param comments the comments to add to the entry
+         * @return this instance of the entry builder
+         */
+        public EntryBuilder comment(String... comments) {
+            context.add(comments);
+            return this;
+        }
+
         /**
          * Makes an entry that holds a boolean value.
          *
@@ -245,7 +268,7 @@ public class TelluriumConfig {
         public ConfigEntry<Boolean> define(String key, boolean defaultValue) {
             ConfigEntry<Boolean> newEntry = new ConfigEntry<>(parent, key, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -259,7 +282,7 @@ public class TelluriumConfig {
         public ConfigEntry<Integer> define(String key, int defaultValue) {
             ConfigEntry<Integer> newEntry = new ConfigEntry<>(parent, key, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -278,7 +301,7 @@ public class TelluriumConfig {
         public RangedConfigEntry<Integer> defineInRange(String key, int minValue, int maxValue, int defaultValue) {
             RangedConfigEntry<Integer> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -292,7 +315,7 @@ public class TelluriumConfig {
         public ConfigEntry<Double> define(String key, double defaultValue) {
             ConfigEntry<Double> newEntry = new ConfigEntry<>(parent, key, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -311,7 +334,7 @@ public class TelluriumConfig {
         public RangedConfigEntry<Double> defineInRange(String key, double minValue, double maxValue, double defaultValue) {
             RangedConfigEntry<Double> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -325,7 +348,7 @@ public class TelluriumConfig {
         public ConfigEntry<Long> define(String key, long defaultValue) {
             ConfigEntry<Long> newEntry = new ConfigEntry<>(parent, key, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -344,7 +367,7 @@ public class TelluriumConfig {
         public RangedConfigEntry<Long> defineInRange(String key, long minValue, long maxValue, long defaultValue) {
             RangedConfigEntry<Long> newEntry = new RangedConfigEntry<>(parent, key, minValue, maxValue, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
@@ -358,18 +381,13 @@ public class TelluriumConfig {
         public ConfigEntry<String> define(String key, String defaultValue) {
             ConfigEntry<String> newEntry = new ConfigEntry<>(parent, key, defaultValue);
             ENTRIES.add(newEntry);
-            context = new EntryBuilderContext();
+            this.buildEntry(newEntry, this.context);
             return newEntry;
         }
 
-        public EntryBuilder comment(String comment) {
-            context.add(comment);
-            return this;
-        }
-
-        public EntryBuilder comment(String... comments) {
-            context.add(comments);
-            return this;
+        private <T extends ConfigEntry<?>> void buildEntry(T configEntry, EntryBuilderContext context) {
+            configEntry.comment(context.getComments().get(0)); //todo fix temporary
+            this.context = new EntryBuilderContext();
         }
 
     }
@@ -462,7 +480,7 @@ public class TelluriumConfig {
          * @param comment the comment to write before the entry
          * @return the config entry that was commented
          */
-        public ConfigEntry<T> comment(String comment) {
+        protected ConfigEntry<T> comment(String comment) {
             this.comment = comment;
             return this;
         }
@@ -547,7 +565,7 @@ public class TelluriumConfig {
          * @return the config entry that was commented
          */
         @Override
-        public RangedConfigEntry<T> comment(String comment) {
+        protected RangedConfigEntry<T> comment(String comment) {
             super.comment(comment);
             return this;
         }
