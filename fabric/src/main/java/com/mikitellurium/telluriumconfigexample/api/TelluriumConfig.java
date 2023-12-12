@@ -86,6 +86,24 @@ public class TelluriumConfig {
     }
 
     /**
+     * Provides a convenient way to create instances of the EntryBuilder class.
+     * The EntryBuilder class is used for building and configuring entries.
+     * <p>
+     * Example Usage:
+     * <pre><code>
+     * TelluriumConfig newConfigFile = new TelluriumConfig("fileName");
+     * EntryBuilder entryBuilder = newConfigFile.entryBuilder();
+     * // Use entryBuilder to build and configure entries.
+     * </code></pre>
+     *
+     * @return A new instance of EntryBuilder
+     * @see EntryBuilder
+     */
+    public EntryBuilder entryBuilder() {
+        return new EntryBuilder(this);
+    }
+
+    /**
      * Build a new config file.
      * <p>
      * If the file already exist also load all its entries values.
