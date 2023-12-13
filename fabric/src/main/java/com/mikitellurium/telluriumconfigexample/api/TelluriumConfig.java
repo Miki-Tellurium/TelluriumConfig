@@ -151,9 +151,9 @@ public class TelluriumConfig {
                         }
                     }
 
-                    if (entry instanceof RangedConfigEntry<?>) {
-                        writer.write("# Range: min=" + ((RangedConfigEntry) entry).getMinValue() +
-                                ", max=" + ((RangedConfigEntry) entry).getMaxValue() + newline);
+                    if (entry instanceof RangedConfigEntry<?> rangedEntry) {
+                        writer.write("# Range: min=" + rangedEntry.getMinValue() +
+                                ", max=" + rangedEntry.getMaxValue() + newline);
                     }
 
                     writer.write("# default = " + entry.getDefaultValue() + newline);
