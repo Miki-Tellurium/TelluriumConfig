@@ -141,23 +141,23 @@ public class TelluriumConfig {
 
             // Write config entries
             if (!ENTRIES.isEmpty()) {
-                for (ConfigEntry entry : ENTRIES) {
+                for (ConfigEntry configEntry : ENTRIES) {
                     String entrySeparator = "=";
 
-                    List<String> list = entry.getComments();
+                    List<String> list = configEntry.getComments();
                     if (!list.isEmpty()) {
                         for (String s : list) {
                             writer.write("# " + s + newline);
                         }
                     }
 
-                    if (entry instanceof RangedConfigEntry<?> rangedEntry) {
+                    if (configEntry instanceof RangedConfigEntry<?> rangedEntry) {
                         writer.write("# Range: min=" + rangedEntry.getMinValue() +
                                 ", max=" + rangedEntry.getMaxValue() + newline);
                     }
 
-                    writer.write("# default = " + entry.getDefaultValue() + newline);
-                    writer.write(entry.getKey() + entrySeparator + entry.getValue() + newline);
+                    writer.write("# default = " + configEntry.getDefaultValue() + newline);
+                    writer.write(configEntry.getKey() + entrySeparator + configEntry.getValue() + newline);
                     writer.write(newline);
                 }
             }
