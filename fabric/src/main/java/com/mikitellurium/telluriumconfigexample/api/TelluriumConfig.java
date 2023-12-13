@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -145,8 +144,11 @@ public class TelluriumConfig {
                 for (ConfigEntry entry : ENTRIES) {
                     String entrySeparator = "=";
 
-                    if (entry.getComment() != null) {
-                        writer.write("# " + entry.getComment() + newline);
+                    List<String> list = entry.getComments();
+                    if (!list.isEmpty()) {
+                        for (String s : list) {
+                            writer.write("# " + s + newline);
+                        }
                     }
 
                     if (entry instanceof RangedConfigEntry<?>) {
@@ -262,17 +264,6 @@ public class TelluriumConfig {
          */
         public EntryBuilder comment(String comment) {
             context.add(comment);
-            return this;
-        }
-
-        /**
-         * Add a list of comments to the entry.
-         *
-         * @param comments the comments to add to the entry
-         * @return this instance of the entry builder
-         */
-        public EntryBuilder comment(String... comments) {
-            context.add(comments);
             return this;
         }
 
@@ -403,10 +394,13 @@ public class TelluriumConfig {
             return newEntry;
         }
 
+        /*
+        * Build and return the entry then reset the context
+        */
         private <T extends ConfigEntry<?>> void buildEntry(T configEntry, EntryBuilderContext context) {
             List<String> comments = context.getComments();
             if (!comments.isEmpty()) {
-                configEntry.comment(comments.get(0)); //todo add support for multiple comment
+                configEntry.addComments(comments);
             }
             this.context = new EntryBuilderContext();
         }
@@ -415,7 +409,7 @@ public class TelluriumConfig {
 
     private static class EntryBuilderContext {
 
-        private final LinkedList<String> comments = new LinkedList<>();
+        private final List<String> comments = new ArrayList<>();
 
         private EntryBuilderContext() {}
 
@@ -423,11 +417,7 @@ public class TelluriumConfig {
             this.comments.add(comment);
         }
 
-        public void add(String... comments) {
-            this.comments.addAll(List.of(comments));
-        }
-
-        public LinkedList<String> getComments() {
+        public List<String> getComments() {
             return comments;
         }
 
@@ -441,7 +431,7 @@ public class TelluriumConfig {
     public static class ConfigEntry<T> {
 
         private final TelluriumConfig builder;
-        private String comment;
+        private final List<String> comments = new ArrayList<>();
         private final String key;
         private final T defaultValue;
         private T value;
@@ -453,7 +443,7 @@ public class TelluriumConfig {
         }
 
         /**
-         * @return the builder that holds this entry
+         * @return the config instance that holds this entry
          */
         public TelluriumConfig getTelluriumConfig() {
             return builder;
@@ -487,7 +477,7 @@ public class TelluriumConfig {
         /**
          * Change the currently loaded value of this entry.
          * <p>
-         * If this is called during the execution of the game, use
+         * If this is called during the execution of the game, call
          * {@link TelluriumConfig#save()} before the game close to save the
          * new value to the config file.
          * @param value the new value
@@ -496,21 +486,21 @@ public class TelluriumConfig {
             this.value = value;
         }
 
-        /**
-         * Set the comment for this entry.
-         * @param comment the comment to write before the entry
+        /*
+         * Add a list of comments for this entry.
+         * @param comments the list of comments to write before the entry
          * @return the config entry that was commented
          */
-        protected ConfigEntry<T> comment(String comment) {
-            this.comment = comment;
+        protected ConfigEntry<T> addComments(List<String> comments) {
+            this.comments.addAll(comments);
             return this;
         }
 
-        /*
-         * Get the comment for this entry
+        /**
+         * @return the comment list of this entry
          */
-        private String getComment() {
-            return comment;
+        private List<String> getComments() {
+            return comments;
         }
 
     }
@@ -580,14 +570,14 @@ public class TelluriumConfig {
             return ((Comparable<T>) value1).compareTo(value2);
         }
 
-        /**
-         * Set the comment for this entry.
-         * @param comment the comment to write before the entry
+        /*
+         * Set the comments for this entry.
+         * @param comments the list of comments to write before the entry
          * @return the config entry that was commented
          */
         @Override
-        protected RangedConfigEntry<T> comment(String comment) {
-            super.comment(comment);
+        protected RangedConfigEntry<T> addComments(List<String> comments) {
+            super.addComments(comments);
             return this;
         }
 

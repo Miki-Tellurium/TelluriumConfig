@@ -14,6 +14,7 @@ public class ExampleConfig {
     public static TelluriumConfig.RangedConfigEntry<Integer> INT_RANGED_CONFIG;
     public static TelluriumConfig.RangedConfigEntry<Double> DOUBLE_RANGED_CONFIG;
     public static TelluriumConfig.RangedConfigEntry<Long> LONG_RANGED_CONFIG;
+    public static TelluriumConfig.ConfigEntry<String> MULTIPLE_COMMENTS_CONFIG;
 
     // This will be called on mod init
     public static void buildConfig() {
@@ -44,6 +45,12 @@ public class ExampleConfig {
         LONG_RANGED_CONFIG = CONFIG.entryBuilder()
                 .comment("This long is always inside this range")
                 .defineInRange("longRangedConfig", 10000L, 100000L, 25000L);
+
+        MULTIPLE_COMMENTS_CONFIG = CONFIG.entryBuilder()
+                .comment("This entry has multiple comments.")
+                .comment("Here is another one.")
+                .comment("And a third.")
+                .define("multipleCommentsEntry", "I have more than one comment line");
 
         // Build our config file, always do this for last
         CONFIG.build();
