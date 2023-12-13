@@ -196,21 +196,22 @@ public class TelluriumConfig {
 
             if (entryParts.length == 2) {
                 ConfigEntry configEntry = this.getConfigEntry(entryParts[0]);
+                String valueString = entryParts[1];
 
                 if (configEntry != null) {
 
                     try {
                         if (configEntry instanceof EnumConfigEntry<?> enumEntry) {
-                            enumEntry.setValueFromString(entryParts[1]);
+                            enumEntry.setValueFromString(valueString);
                             return;
                         }
                         Class<?> valueType = configEntry.getValue().getClass();
                         switch (valueType.getSimpleName()) {
-                            case "Boolean" -> configEntry.setValue(Boolean.parseBoolean(entryParts[1]));
-                            case "Integer" -> configEntry.setValue(Integer.parseInt(entryParts[1]));
-                            case "Double" -> configEntry.setValue(Double.parseDouble(entryParts[1]));
-                            case "Long" -> configEntry.setValue(Long.parseLong(entryParts[1]));
-                            case "String" -> configEntry.setValue(String.valueOf(entryParts[1]));
+                            case "Boolean" -> configEntry.setValue(Boolean.parseBoolean(valueString));
+                            case "Integer" -> configEntry.setValue(Integer.parseInt(valueString));
+                            case "Double" -> configEntry.setValue(Double.parseDouble(valueString));
+                            case "Long" -> configEntry.setValue(Long.parseLong(valueString));
+                            case "String" -> configEntry.setValue(String.valueOf(valueString));
                             default -> configEntry.setValue(configEntry.getDefaultValue());  // Handle unsupported types
                         }
                     } catch (NumberFormatException e) {
