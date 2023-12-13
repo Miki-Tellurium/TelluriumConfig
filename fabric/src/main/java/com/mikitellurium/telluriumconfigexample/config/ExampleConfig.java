@@ -2,6 +2,7 @@ package com.mikitellurium.telluriumconfigexample.config;
 
 import com.mikitellurium.telluriumconfigexample.TelluriumConfigExampleMod;
 import com.mikitellurium.telluriumconfigexample.api.TelluriumConfig;
+import com.mikitellurium.telluriumconfigexample.api.TestEnum;
 
 public class ExampleConfig {
     // Create a new config builder
@@ -15,6 +16,7 @@ public class ExampleConfig {
     public static TelluriumConfig.RangedConfigEntry<Double> DOUBLE_RANGED_CONFIG;
     public static TelluriumConfig.RangedConfigEntry<Long> LONG_RANGED_CONFIG;
     public static TelluriumConfig.ConfigEntry<String> MULTIPLE_COMMENTS_CONFIG;
+    public static TelluriumConfig.EnumConfigEntry<TestEnum> ENUM_CONFIG;
 
     // This will be called on mod init
     public static void buildConfig() {
@@ -51,6 +53,10 @@ public class ExampleConfig {
                 .comment("Here is another one.")
                 .comment("And a third.")
                 .define("multipleCommentsEntry", "I have more than one comment line");
+
+        ENUM_CONFIG = CONFIG.entryBuilder()
+                .comment("This is an enum")
+                .define("enumConfig", TestEnum.NUMBER1);
 
         // Build our config file, always do this for last
         CONFIG.build();

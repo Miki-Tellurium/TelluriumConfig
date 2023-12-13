@@ -200,6 +200,10 @@ public class TelluriumConfig {
                 if (configEntry != null) {
 
                     try {
+                        if (configEntry instanceof EnumConfigEntry<?> enumEntry) {
+                            enumEntry.setValueFromString(entryParts[1]);
+                            return;
+                        }
                         Class<?> valueType = configEntry.getValue().getClass();
                         switch (valueType.getSimpleName()) {
                             case "Boolean" -> configEntry.setValue(Boolean.parseBoolean(entryParts[1]));
@@ -394,6 +398,14 @@ public class TelluriumConfig {
             return newEntry;
         }
 
+        // Testing
+        public <T extends Enum<T>> EnumConfigEntry<T> define(String key, T defaultValue) {
+            EnumConfigEntry<T> newEntry = new EnumConfigEntry<>(parent, key, defaultValue);
+            ENTRIES.add(newEntry);
+            this.buildEntry(newEntry, this.context);
+            return newEntry;
+        }
+
         /*
         * Build and return the entry then reset the context
         */
@@ -579,6 +591,20 @@ public class TelluriumConfig {
         protected RangedConfigEntry<T> addComments(List<String> comments) {
             super.addComments(comments);
             return this;
+        }
+
+    }
+
+    // Testing
+    public static class EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
+
+        private EnumConfigEntry(TelluriumConfig parent, String key, T defaultValue) {
+            super(parent, key, defaultValue);
+        }
+
+        public void setValueFromString(String text) {
+            T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
+            this.setValue(value);
         }
 
     }

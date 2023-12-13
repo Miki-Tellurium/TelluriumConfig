@@ -33,6 +33,7 @@ public class TelluriumConfigExampleMod implements ModInitializer {
 			entity.sendSystemMessage(Component.literal("Int ranged config is: " + ExampleConfig.INT_RANGED_CONFIG.getValue()));
 			entity.sendSystemMessage(Component.literal("Double ranged config is: " + ExampleConfig.DOUBLE_RANGED_CONFIG.getValue()));
 			entity.sendSystemMessage(Component.literal("Long ranged config is: " + ExampleConfig.LONG_RANGED_CONFIG.getValue()));
+			entity.sendSystemMessage(Component.literal("Enum config is: " + ExampleConfig.ENUM_CONFIG.getValue()));
 		}
 	}
 
