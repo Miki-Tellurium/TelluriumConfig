@@ -119,7 +119,7 @@ public class TelluriumConfig {
     /**
      * Saves the current loaded values to the config file.
      * <p>
-     * This is automatically called from the {@link #build()} method
+     * This is automatically called from the {@link TelluriumConfig#build()} method
      * but can also be called individually to save values when they
      * are changed during the execution of the game.
      */
@@ -212,10 +212,14 @@ public class TelluriumConfig {
                             case "Double" -> configEntry.setValue(Double.parseDouble(valueString));
                             case "Long" -> configEntry.setValue(Long.parseLong(valueString));
                             case "String" -> configEntry.setValue(String.valueOf(valueString));
-                            default -> configEntry.setValue(configEntry.getDefaultValue());  // Handle unsupported types
+                            default -> { // Handle unsupported types
+                                configEntry.setValue(configEntry.getDefaultValue());
+                                logger.error("Unsupported value type for entry \"" + configEntry.getKey() + "\". Loaded default value.");
+                            }
                         }
                     } catch (NumberFormatException e) {
                         configEntry.setValue(configEntry.getDefaultValue());
+                        logger.error("Incorrect value declaration for entry\"" + configEntry.getKey() + "\". Loaded default value.");
                     }
 
                 } else {
@@ -251,6 +255,26 @@ public class TelluriumConfig {
         return true;
     }
 
+    /**
+     * The EntryBuilder class provides a convenient way to construct configuration entries
+     * within a specific TelluriumConfig instance. Configuration entries represent
+     * individual settings with associated values, and EntryBuilder simplifies their creation and
+     * configuration.
+     * <p>
+     * Example Usage:
+     * <pre><code>
+     * TelluriumConfig telluriumConfig = new TelluriumConfig();
+     * EntryBuilder entryBuilder = telluriumConfig.entryBuilder();
+     *
+     * // Define a boolean entry with a default value
+     *{@literal ConfigEntry<Boolean>} booleanEntry = entryBuilder.define("enableFeature", true);
+     *
+     * // Define an integer entry within a specified range
+     *{@literal RangedConfigEntry<Integer>} rangedEntry = entryBuilder.comment("This is a comment")
+     * .defineInRange("cooldownSeconds", 1, 60, 10);
+     * </code></pre>
+     *
+     */
     public class EntryBuilder {
 
         private final TelluriumConfig parent;
@@ -420,6 +444,11 @@ public class TelluriumConfig {
 
     }
 
+    /*
+     * A convenience object that holds the comment context for
+     * a ConfigEntry instance before it is constructed by the
+     * EntryBuilder
+     */
     private static class EntryBuilderContext {
 
         private final List<String> comments = new ArrayList<>();
@@ -438,7 +467,10 @@ public class TelluriumConfig {
 
     /**
      * An object used to save a config value in a
-     * config file.
+     * config file. To make a new entry see the
+     * implementation of {@link EntryBuilder}.
+     *
+     * @param <T> Is the type of value held by this entry
      */
     @SuppressWarnings("fieldCanBeLocal")
     public static class ConfigEntry<T> {
@@ -458,7 +490,7 @@ public class TelluriumConfig {
         /**
          * @return the config instance that holds this entry
          */
-        public TelluriumConfig getTelluriumConfig() {
+        public TelluriumConfig getParentConfig() {
             return builder;
         }
 
@@ -520,7 +552,10 @@ public class TelluriumConfig {
 
     /**
      * An object used to save a config value that has to be
-     * in a certain range.
+     * in a certain range. To make a new entry see the
+     * implementation of {@link EntryBuilder}.
+     *
+     * @param <T> Is the type of value held by this entry, it has to be a {@link Number}
      */
     public static class RangedConfigEntry<T extends Number> extends ConfigEntry<T> {
 
@@ -596,16 +631,34 @@ public class TelluriumConfig {
 
     }
 
-    // Testing
+    /**
+     * An object used to save a config value that use
+     * an enum. To make a new entry see the
+     * implementation of {@link EntryBuilder}.
+     *
+     * @param <T> The enum type associated with this entry
+     */
     public static class EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
 
         private EnumConfigEntry(TelluriumConfig parent, String key, T defaultValue) {
             super(parent, key, defaultValue);
         }
 
+        /**
+         * Sets the value of the enum configuration entry based
+         * on the provided string. The string should match the
+         * name of one of the enum constants.
+         *
+         * @param text The string representation of the enum value
+         */
         public void setValueFromString(String text) {
-            T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
-            this.setValue(value);
+            try {
+                T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
+                this.setValue(value);
+            } catch (IllegalArgumentException e) {
+                this.setValue(this.getDefaultValue());
+                this.getParentConfig().logger.error("Could not load entry \"" + this.getKey() + "\" value. Loaded default value.");
+            }
         }
 
     }
