@@ -567,14 +567,14 @@ public class TelluriumConfig {
      * in a certain range. To make a new entry see the
      * implementation of {@link EntryBuilder}.
      *
-     * @param <T> Is the type of value held by this entry, it has to be a {@link Number}
+     * @param <N> Is the type of {@link Number} held by this entry
      */
-    public static class RangedConfigEntry<T extends Number> extends ConfigEntry<T> {
+    public static class RangedConfigEntry<N extends Number> extends ConfigEntry<N> {
 
-        private final T minValue;
-        private final T maxValue;
+        private final N minValue;
+        private final N maxValue;
 
-        private RangedConfigEntry(TelluriumConfig parent, String key, T minValue, T maxValue, T defaultValue) {
+        private RangedConfigEntry(TelluriumConfig parent, String key, N minValue, N maxValue, N defaultValue) {
             super(parent, key, defaultValue);
             this.minValue = minValue;
             this.maxValue = maxValue;
@@ -583,14 +583,14 @@ public class TelluriumConfig {
         /**
          * @return the minimum value this entry can have
          */
-        public T getMinValue() {
+        public N getMinValue() {
             return minValue;
         }
 
         /**
          * @return the maximum value this entry can have
          */
-        public T getMaxValue() {
+        public N getMaxValue() {
             return maxValue;
         }
 
@@ -606,7 +606,7 @@ public class TelluriumConfig {
          * @param value the new value
          */
         @Override
-        public void setValue(T value) {
+        public void setValue(N value) {
             if (compare(value, minValue) < 0) {
                 super.setValue(minValue);
             } else if (compare(value, maxValue) > 0){
@@ -626,8 +626,8 @@ public class TelluriumConfig {
          *         value1 is greater than value2
          */
         @SuppressWarnings("unchecked")
-        private int compare(T value1, T value2) {
-            return ((Comparable<T>) value1).compareTo(value2);
+        private int compare(N value1, N value2) {
+            return ((Comparable<N>) value1).compareTo(value2);
         }
 
         /**
@@ -636,7 +636,7 @@ public class TelluriumConfig {
          * @return the config entry that was commented
          */
         @Override
-        public RangedConfigEntry<T> comment(String comment) {
+        public RangedConfigEntry<N> comment(String comment) {
             super.comment(comment);
             return this;
         }
@@ -648,15 +648,15 @@ public class TelluriumConfig {
      * an enum. To make a new entry see the
      * implementation of {@link EntryBuilder}.
      *
-     * @param <T> The enum type associated with this entry
+     * @param <E> The enum type associated with this entry
      */
-    public static class EnumConfigEntry<T extends Enum<T>> extends ConfigEntry<T> {
+    public static class EnumConfigEntry<E extends Enum<E>> extends ConfigEntry<E> {
 
-        private EnumConfigEntry(TelluriumConfig parent, String key, T defaultValue) {
+        private EnumConfigEntry(TelluriumConfig parent, String key, E defaultValue) {
             super(parent, key, defaultValue);
         }
 
-        public Class<T> getEnumClass() {
+        public Class<E> getEnumClass() {
             return this.getDefaultValue().getDeclaringClass();
         }
 
@@ -668,7 +668,7 @@ public class TelluriumConfig {
          * @param text The string representation of the enum value
          */
         public void setValueFromString(String text) {
-            T value = T.valueOf(this.getEnumClass(), text);
+            E value = E.valueOf(this.getEnumClass(), text);
             this.setValue(value);
         }
 
