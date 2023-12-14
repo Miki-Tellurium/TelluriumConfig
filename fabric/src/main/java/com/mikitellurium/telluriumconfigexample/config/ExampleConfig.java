@@ -58,7 +58,7 @@ public class ExampleConfig {
 
         ENUM_CONFIG = CONFIG.entryBuilder()
                 .comment("This is an enum")
-                .define("enumConfig", TestEnum.NUMBER1);
+                .define("enumConfig", TestEnum.RED);
 
         // Build our config file, always do this for last
         CONFIG.build();

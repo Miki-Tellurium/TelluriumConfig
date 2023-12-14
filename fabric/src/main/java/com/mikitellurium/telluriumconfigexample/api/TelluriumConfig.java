@@ -154,9 +154,19 @@ public class TelluriumConfig {
                     if (configEntry instanceof RangedConfigEntry<?> rangedEntry) {
                         writer.write("# Range: min=" + rangedEntry.getMinValue() +
                                 ", max=" + rangedEntry.getMaxValue() + newline);
+                    } else if (configEntry instanceof EnumConfigEntry<?> enumEntry) {
+                        writer.write("# Options: ");
+                        Enum<?>[] constants = enumEntry.getEnumClass().getEnumConstants();
+                        for (Enum<?> constant : constants) {
+                            writer.write(constant.toString());
+                            if (!constants[constants.length - 1].equals(constant)) {
+                                writer.write(", ");
+                            }
+                        }
+                        writer.write(newline);
                     }
 
-                    writer.write("# default = " + configEntry.getDefaultValue() + newline);
+                    writer.write("# Default = " + configEntry.getDefaultValue() + newline);
                     writer.write(configEntry.getKey() + entrySeparator + configEntry.getValue() + newline);
                     writer.write(newline);
                 }
@@ -217,9 +227,9 @@ public class TelluriumConfig {
                                 logger.error("Unsupported value type for entry \"" + configEntry.getKey() + "\". Loaded default value.");
                             }
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (IllegalArgumentException e) {
                         configEntry.setValue(configEntry.getDefaultValue());
-                        logger.error("Incorrect value declaration for entry\"" + configEntry.getKey() + "\". Loaded default value.");
+                        logger.error("Invalid value for entry \"" + configEntry.getKey() + "\". Loaded default value.");
                     }
 
                 } else {
@@ -646,6 +656,10 @@ public class TelluriumConfig {
             super(parent, key, defaultValue);
         }
 
+        public Class<T> getEnumClass() {
+            return this.getDefaultValue().getDeclaringClass();
+        }
+
         /**
          * Sets the value of the enum configuration entry based
          * on the provided string. The string should match the
@@ -654,7 +668,7 @@ public class TelluriumConfig {
          * @param text The string representation of the enum value
          */
         public void setValueFromString(String text) {
-            T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
+            T value = T.valueOf(this.getEnumClass(), text);
             this.setValue(value);
         }
 
