@@ -652,13 +652,8 @@ public class TelluriumConfig {
          * @param text The string representation of the enum value
          */
         public void setValueFromString(String text) {
-            try {
-                T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
-                this.setValue(value);
-            } catch (IllegalArgumentException e) {
-                this.setValue(this.getDefaultValue());
-                this.getParentConfig().logger.error("Could not load entry \"" + this.getKey() + "\" value. Loaded default value.");
-            }
+            T value = T.valueOf(this.getDefaultValue().getDeclaringClass(), text);
+            this.setValue(value);
         }
 
     }
