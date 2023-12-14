@@ -51,8 +51,10 @@ public class ExampleConfig {
         MULTIPLE_COMMENTS_CONFIG = CONFIG.entryBuilder()
                 .comment("This entry has multiple comments.")
                 .comment("Here is another one.")
+                .define("multipleCommentsEntry", "I have more than one comment line")
                 .comment("And a third.")
-                .define("multipleCommentsEntry", "I have more than one comment line");
+                .comment("Also 4th.")
+                .comment("You can comment whenever.");
 
         ENUM_CONFIG = CONFIG.entryBuilder()
                 .comment("This is an enum")
