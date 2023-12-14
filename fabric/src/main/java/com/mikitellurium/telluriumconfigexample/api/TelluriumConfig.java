@@ -554,9 +554,9 @@ public class TelluriumConfig {
         }
 
         /**
-         * @return the comment list of this entry
+         * @return the comments list of this entry
          */
-        private List<String> getComments() {
+        public List<String> getComments() {
             return comments;
         }
 
