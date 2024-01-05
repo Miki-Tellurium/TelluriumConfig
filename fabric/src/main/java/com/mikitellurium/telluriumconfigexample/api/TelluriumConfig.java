@@ -39,7 +39,7 @@ import java.util.Scanner;
 /**
  * A class used to create and load simple config files.
  * @author Miki Tellurium
- * @version 1.5.0_beta-Fabric
+ * @version 1.5.0-Fabric
  */
 @SuppressWarnings("rawtypes")
 public class TelluriumConfig {
