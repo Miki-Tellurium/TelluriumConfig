@@ -672,6 +672,17 @@ public class TelluriumConfig {
             this.setValue(value);
         }
 
+        /**
+         * Add a comment for this entry.
+         * @param comment the comment to write before the entry
+         * @return the config entry that was commented
+         */
+        @Override
+        public EnumConfigEntry<E> comment(String comment) {
+            super.comment(comment);
+            return this;
+        }
+
     }
 
 }
