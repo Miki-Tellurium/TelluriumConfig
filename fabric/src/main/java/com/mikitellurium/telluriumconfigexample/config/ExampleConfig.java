@@ -2,7 +2,7 @@ package com.mikitellurium.telluriumconfigexample.config;
 
 import com.mikitellurium.telluriumconfigexample.TelluriumConfigExampleMod;
 import com.mikitellurium.telluriumconfigexample.api.TelluriumConfig;
-import com.mikitellurium.telluriumconfigexample.api.TestEnum;
+import com.mikitellurium.telluriumconfigexample.TestEnum;
 
 public class ExampleConfig {
     // Create a new config builder

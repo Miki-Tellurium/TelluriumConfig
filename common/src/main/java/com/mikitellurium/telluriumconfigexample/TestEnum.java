@@ -1,4 +1,4 @@
-package com.mikitellurium.telluriumconfigexample.api;
+package com.mikitellurium.telluriumconfigexample;
 
 public enum TestEnum {
     RED,

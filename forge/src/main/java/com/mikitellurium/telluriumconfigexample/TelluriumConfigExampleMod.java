@@ -34,14 +34,15 @@ public class TelluriumConfigExampleMod {
 
     @SubscribeEvent
     public void onPlayerJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof ServerPlayer) {
+        if (event.getEntity() instanceof ServerPlayer player) {
             // Send a message on world join using the values specified in our config file
-            event.getEntity().sendSystemMessage(Component.literal("Int config is: " + ExampleConfig.INT_CONFIG.getValue()));
-            event.getEntity().sendSystemMessage(Component.literal("String config says: " + ExampleConfig.STRING_CONFIG.getValue()));
-            event.getEntity().sendSystemMessage(Component.literal("Boolean config is: " + ExampleConfig.BOOLEAN_CONFIG.getValue()));
-            event.getEntity().sendSystemMessage(Component.literal("Int ranged config is: " + ExampleConfig.INT_RANGED_CONFIG.getValue()));
-            event.getEntity().sendSystemMessage(Component.literal("Double ranged config is: " + ExampleConfig.DOUBLE_RANGED_CONFIG.getValue()));
-            event.getEntity().sendSystemMessage(Component.literal("Long ranged config is: " + ExampleConfig.LONG_RANGED_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Int config is: " + ExampleConfig.INT_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("String config says: " + ExampleConfig.STRING_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Boolean config is: " + ExampleConfig.BOOLEAN_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Int ranged config is: " + ExampleConfig.INT_RANGED_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Double ranged config is: " + ExampleConfig.DOUBLE_RANGED_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Long ranged config is: " + ExampleConfig.LONG_RANGED_CONFIG.getValue()));
+            player.sendSystemMessage(Component.literal("Enum config is: " + ExampleConfig.ENUM_CONFIG.getValue()));
         }
     }
 
